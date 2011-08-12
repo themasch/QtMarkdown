@@ -5,18 +5,18 @@
 #include <QDebug>
 
 
-//extern "C" {
-//#include <mkdio.h>
-//}
+extern "C" {
+#include <mkdio.h>
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-   // QTimer *timer = new QTimer(this);
-   // connect(timer, SIGNAL(timeout()), this, SLOT(updateMkd()));
-   // timer->start(2000);
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateMkd()));
+    timer->start(500);
 }
 
 MainWindow::~MainWindow()
@@ -27,13 +27,16 @@ MainWindow::~MainWindow()
 void MainWindow::updateMkd()
 {
     QString input = this->ui->plainTextEdit->toPlainText();
-    char *in = input.toLocal8Bit().data(); /*
+    char *in = strdup(input.toAscii().data());
+ #ifdef _MKDIO_D
     MMIOT *mkd = mkd_string(in, input.length(), MKD_AUTOLINK);
-    int status = mkd_compile(mkd, MKD_AUTOLINK);
+    mkd_compile(mkd, MKD_AUTOLINK);
     char *out = NULL;
-    int count = mkd_document(mkd, &out);
-    this->ui->textBrowser->setHtml(out); */
-    this->ui->textBrowser->setPlainText(QString(in));
+    mkd_document(mkd, &out);
+    this->ui->textBrowser_2->setHtml(QString::fromLocal8Bit(out));
+ #endif
+    this->ui->textBrowser->setPlainText(QString::fromAscii(in));
+    free(in);
 }
 
 void MainWindow::on_actionRefresh_2_triggered()
