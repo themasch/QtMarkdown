@@ -18,6 +18,10 @@ public:
 private slots:
     void updateMkd();
 
+    void on_actionRefresh_2_triggered();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
