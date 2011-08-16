@@ -14,6 +14,10 @@ LIBS += -lmarkdown
 SOURCES += main.cpp\
         MainWindow.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    Config.h
 
 FORMS    += MainWindow.ui
+
+OTHER_FILES += \
+    Readme.md

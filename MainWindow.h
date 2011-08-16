@@ -15,6 +15,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
 private slots:
     void updateMkd();
 
@@ -22,8 +23,11 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_actionHide_Debug_triggered();
+
 private:
     Ui::MainWindow *ui;
+    void initToolbar(QToolBar*);
 };
 
 #endif // MAINWINDOW_H

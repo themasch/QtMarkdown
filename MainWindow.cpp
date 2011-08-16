@@ -1,8 +1,11 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "Config.h"
 
 #include <QTimer>
 #include <QDebug>
+#include <QIcon>
+#include <QAction>
 
 
 extern "C" {
@@ -14,9 +17,34 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->ui->textBrowser_2->setVisible(false);
+    this->showMaximized();
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMkd()));
     timer->start(500);
+
+    this->initToolbar(this->ui->mainToolBar);
+}
+
+void MainWindow::initToolbar(QToolBar *toolBar)
+{
+    QAction *refresh = new QAction(QIcon::fromTheme("view-refresh"),  tr("&refresh"), this);
+    QAction *open    = new QAction(QIcon::fromTheme("document-open"), tr("&open"),    this);
+    QAction *save    = new QAction(QIcon::fromTheme("document-save"), tr("&save"),    this);
+    QAction *newFile = new QAction(QIcon::fromTheme("document-new"),  tr("&new"),     this);
+
+    toolBar->addAction(open);
+    toolBar->addAction(save);
+    toolBar->addAction(newFile);
+    toolBar->addAction(refresh);
+
+#ifdef DEBUG
+    QAction *tglDebug = new QAction("debug", this);
+    toolBar->addAction(tglDebug);
+    // connect
+    connect(tglDebug, SIGNAL(triggered()), this, SLOT(on_actionHide_Debug_triggered()));
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -33,9 +61,9 @@ void MainWindow::updateMkd()
     mkd_compile(mkd, MKD_AUTOLINK);
     char *out = NULL;
     mkd_document(mkd, &out);
-    this->ui->textBrowser_2->setHtml(QString::fromLocal8Bit(out));
+    this->ui->textBrowser->setHtml(QString::fromLocal8Bit(out));
  #endif
-    this->ui->textBrowser->setPlainText(QString::fromAscii(in));
+    this->ui->textBrowser_2->setPlainText(QString::fromAscii(in)); // DEBUG
     free(in);
 }
 
@@ -47,4 +75,9 @@ void MainWindow::on_actionRefresh_2_triggered()
 void MainWindow::on_pushButton_clicked()
 {
     this->updateMkd();
+}
+
+void MainWindow::on_actionHide_Debug_triggered()
+{
+    this->ui->textBrowser_2->setVisible(!this->ui->textBrowser_2->isVisible());
 }
