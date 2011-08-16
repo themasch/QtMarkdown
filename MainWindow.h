@@ -18,12 +18,11 @@ public:
 
 private slots:
     void updateMkd();
-
     void on_actionRefresh_2_triggered();
-
     void on_pushButton_clicked();
-
     void on_actionHide_Debug_triggered();
+    void openFile();
+    void saveFile();
 
 private:
     Ui::MainWindow *ui;

@@ -1,13 +1,12 @@
-QtMarkdown
-========
-
 **QtMarkdown** is a simple GUI for creating Markdown documents.
 Currently it features a textarea & and a live preview.
 
 TODO
 --------
-* open / save / create documents
+* create documents
 * syntax helpers (Buttons)
+* support for various flavors
+* support for own CSS 
 
 Maybe..
 ------------
@@ -22,6 +21,6 @@ Currently you have to clone this git repository and qmake/make by yourself.
     qmake
     make
 
-Dependencys
+Dependencies
 ---------------------
 You have to install David Parsons [discount](https://github.com/Orc/discount) library in order to compile & use QtMarkdown

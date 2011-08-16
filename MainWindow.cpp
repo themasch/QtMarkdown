@@ -7,6 +7,8 @@
 #include <QIcon>
 #include <QAction>
 
+#include <QFileDialog>
+
 
 extern "C" {
 #include <mkdio.h>
@@ -39,6 +41,10 @@ void MainWindow::initToolbar(QToolBar *toolBar)
     toolBar->addAction(newFile);
     toolBar->addAction(refresh);
 
+    connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
+
+    connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
+
 #ifdef DEBUG
     QAction *tglDebug = new QAction("debug", this);
     toolBar->addAction(tglDebug);
@@ -50,6 +56,32 @@ void MainWindow::initToolbar(QToolBar *toolBar)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openFile()
+{
+    QString path = QFileDialog::getOpenFileName(this, "Datei öffnen", QDir::homePath());
+    if(!(path.isNull() || path.isEmpty())) {
+        QFile fp(path);
+        fp.open(QFile::ReadOnly);
+        this->ui->plainTextEdit->setPlainText(QString::fromLocal8Bit(fp.readAll()));
+    } else {
+        qDebug() << path;
+    }
+
+}
+
+void MainWindow::saveFile()
+{
+    QString path = QFileDialog::getSaveFileName(this, "Datei speichern", QDir::homePath());
+    if(!(path.isNull() || path.isEmpty())) {
+        QFile fp(path);
+        fp.open(QFile::WriteOnly | QFile::Truncate);
+        QString text = this->ui->plainTextEdit->toPlainText();
+        fp.write(text.toLocal8Bit());
+    } else {
+        qDebug() << path;
+    }
 }
 
 void MainWindow::updateMkd()
